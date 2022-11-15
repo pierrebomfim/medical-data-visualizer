@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Import data
-df = pd.read_csv(r'C:\Users\pierr\Downloads\medical_examination.csv')
+df = pd.read_csv(r'medical_examination.csv')
 
 # Add 'overweight' column
 df['overweight'] = (df['weight'] / (df['height']/100)**2).apply(lambda x: 1 if x > 25 else 0)
@@ -22,8 +22,8 @@ def draw_cat_plot():
 
 
     # Group and reformat the data to split it by 'cardio'. Show the counts of each feature. You will have to rename one of the columns for the catplot to work correctly.
-    df_cat['total'] = 1  
-    df_cat = df_cat = df_cat.groupby(['cardio', 'variable', 'value'], as_index=False).count()
+    df_cat['total'] = 1
+    df_cat = df_cat.groupby(['cardio', 'variable', 'value'], as_index=False).count()
     
 
     # Draw the catplot with 'sns.catplot()'
@@ -31,8 +31,7 @@ def draw_cat_plot():
 
 
     # Get the figure for the output
-    fig = sns.catplot(data=df_cat, x="variable", y='total', hue='value', kind="bar", col='cardio', height=4, aspect=2)
-plt.show()
+    fig = sns.catplot(data=df_cat, x="variable", y='total', hue='value', kind="bar", col='cardio').fig
 
 
     # Do not modify the next two lines
@@ -55,17 +54,17 @@ def draw_heat_map():
     corr = df_heat.corr(method='pearson')
 
     # Generate a mask for the upper triangle
-    mask = np.triu(corr)
+    mask = np.zeros_like(corr)
+    mask[np.triu_indices_from(mask)] = True
 
 
 
     # Set up the matplotlib figure
     fig, ax = plt.subplots(figsize=(12,12))
-sns.heatmap(corr, linewidths=1, annot=True, square=True, mask=mask, fmt='.1f',  center=0.08, cbar_kws={'shrink':0.5})
-plt.show()
+
 
     # Draw the heatmap with 'sns.heatmap()'
-
+    sns.heatmap(corr, linewidths=1, annot=True, square=True, mask=mask, fmt='.1f',  center=0.08, cbar_kws={'shrink':0.5})
 
 
     # Do not modify the next two lines
